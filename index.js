@@ -3,6 +3,8 @@ const app = express();
 const cors = require("cors");
 const pool = require("./db");
 const path = require("path");
+const NewsAPI = require('newsapi');
+const newsapi = new NewsAPI('3f8137d4b5474ecf8b8f0aebb0afb18e');
 const PORT = process.env.PORT || 5000;
 
 // process.env.NODE_ENV => production or undefined
@@ -152,6 +154,26 @@ app.delete("/todos/:id", async (req, res) => {
     console.error(err.message);
   }
 });
+
+//get top headlines from newsapi
+app.get("/news/topheadlines", async (req, res) => {
+
+      const allNews = await newsapi.v2.topHeadlines({
+        country: 'us',
+
+      })
+      res.json(allNews);
+  })
+
+  //get news with query
+
+app.get("/news/:query", async (req, res) => {
+  const query = req.params;
+  const results = await newsapi.v2.everything({q: query})
+  res.json(results);
+})
+
+
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "client/build/index.html"));

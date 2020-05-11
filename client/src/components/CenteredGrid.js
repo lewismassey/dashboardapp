@@ -9,6 +9,7 @@ import InputTodo from './Todos/InputTodo';
 import ListTodos from './Todos/ListTodos';
 import ListTicks from './Ticks/ListTicks';
 import ListNews from './News/ListNews';
+import ListResults from './News/ListResults';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -62,13 +63,13 @@ const CenteredGrid = () => {
           <Grid item xs={12}>
             <Paper className={classes.paper}>
             <h6>Ticks</h6>
-            
+
             </Paper>
           </Grid>
           <Grid item xs={12}>
             <Paper className={`${classes.paper} ${classes.calendar}`}>
               News/Charts
-              <ListNews/>
+              <ListResults/>
             </Paper>
           </Grid>
         </Grid>
