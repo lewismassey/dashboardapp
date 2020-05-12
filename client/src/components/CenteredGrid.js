@@ -11,6 +11,7 @@ import ListTicks from './Ticks/ListTicks';
 import ListNews from './News/ListNews';
 import ListResults from './News/ListResults';
 import ListNotes from './Notes/ListNotes';
+import Calendar from './Calendar/Calendar';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -56,7 +57,9 @@ const CenteredGrid = () => {
           </div>
           <Grid item xs={12} container>
             <Grid item xs={6} >
-              <Paper className={`${classes.paper} ${classes.calendar}`}>Calendar</Paper>
+              <Paper className={`${classes.paper} ${classes.calendar}`}>
+              <Calendar/>
+              </Paper>
             </Grid>
             <Grid item xs={6} >
               <Paper className={classes.paper}>
