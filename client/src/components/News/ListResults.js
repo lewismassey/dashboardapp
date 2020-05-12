@@ -4,21 +4,52 @@ import SearchBar from './SearchBar';
 const ListResults = (searchValue) => {
   const [results, setResults] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [checkedItems, setCheckedItems] = useState([]);
+  const [errorMessage, setErrorMessage] = useState(null);
 
-  async function getResults(searchValue) {
-    const response = await fetch(`/news/:${searchValue}`);
-    const resultsArray = response.json();
-    const articles = resultsArray.articles;
-    setResults(articles);
+  //async function getResults(searchValue) {
+    //const response = await fetch(`/news/:bitcoin`);
+    //const resultsArray = response.json();
+    //console.log(resultsArray);
+    //return resultsArray;
+    //const articles = resultsArray.articles;
+    //console.log(articles);
+  //  setResults(resultsArray);
   //  if (results !== null) {setCheckedItems(results)};
+    //setCheckedItems(true);
+  //}
 
-  }
-
-  useEffect(() => {
+/*  useEffect(() => {
+    const getResults = async (searchValue) => {
+      const response = await fetch(`/news/:${searchValue}`);
+      const resultsArray = response.json();
+      console.log(resultsArray);
+      setResults(resultsArray);
+    }
     getResults();
+
   }, [searchValue]
-  )
+) */
+
+useEffect(() => {
+  console.log('first run')
+}, [searchValue]
+)
+
+
+const getResults = searchValue => {
+    setIsLoaded(true);
+    setErrorMessage(null);
+
+    fetch(`/news/:${searchValue}`)
+      .then(response => response.json())
+      .then(data => {
+
+          setResults(data.articles);
+          setIsLoaded(true);
+
+      });
+      console.log(results)
+  	};
 
 
 return (
@@ -35,9 +66,7 @@ return (
         </tr>
       </thead>
       <tbody>
-        {!checkedItems ? (
-          <tr><td> no results</td></tr>
-        ) : (
+        {
         results.map((item) => (
           <tr key={item.url}>
             <td>{item.author}</td>
@@ -45,7 +74,7 @@ return (
             <td>{item.content}</td>
 
           </tr>
-        )))}
+        ))}
       </tbody>
     </table>
   </Fragment>
