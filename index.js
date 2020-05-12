@@ -168,8 +168,8 @@ app.get("/news/topheadlines", async (req, res) => {
   //get news with query
 
 app.get("/news/:query", async (req, res) => {
-  const query = req.params;
-  const results = await newsapi.v2.everything({q: query})
+  const { query } = req.params;
+  const results = await newsapi.v2.everything({q: `${query}`})
   res.json(results);
 })
 
