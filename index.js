@@ -155,6 +155,70 @@ app.delete("/todos/:id", async (req, res) => {
   }
 });
 
+app.get("/notes", async (req, res) => {
+  try {
+    const allNotes = await pool.query("SELECT * from notes");
+    res.json(allNotes.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+app.get("/notes/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const note = await pool.query("SELECT * FROM notes WHERE note_id = $1", [
+      id,
+    ]);
+    res.json(note.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+app.post("/notes", async (req, res) => {
+  try {
+    const { description } = req.body;
+    const newNote = await pool.query(
+      "INSERT INTO notes (description) VALUES($1) RETURNING *",
+      [description]
+    );
+
+    res.json(newNote.rows[0]);
+  } catch (err){
+    console.error(err.message)
+  }
+})
+
+app.put("/notes/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { description } = req.body;
+    const updateNote = await pool.query(
+      "UPDATE notes SET description = $1 WHERE note_id = $2",
+      [description, id]
+    );
+
+    // res.json('todo was updated', updateTodo);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// delete a todo
+app.delete("/notes/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleteNote = await pool.query("DELETE FROM notes WHERE note_id = $1", [
+      id,
+    ]);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+
+
 //get top headlines from newsapi
 app.get("/news/topheadlines", async (req, res) => {
 
