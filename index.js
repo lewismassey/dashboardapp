@@ -47,12 +47,16 @@ app.get("/links/:id", async (req, res) => {
 // create a link
 app.post("/links", async (req, res) => {
   try {
-    console.log(req.body);
-    const { description } = req.body;
+    console.log(req.body.description);
+    const description = req.body.description;
+    console.log(description);
+    const category = req.body.category;
+    console.log(category);
     const newTodo = await pool.query(
-      "INSERT INTO links (link) VALUES($1) RETURNING *",
-      [description]
+      "INSERT INTO links (link, category) VALUES($1, $2) RETURNING *",
+      [description, category]
     );
+    console.log(newTodo);
 
     res.json(newTodo.rows[0]);
   } catch (err) {
@@ -115,10 +119,12 @@ app.get("/todos/:id", async (req, res) => {
 app.post("/todos", async (req, res) => {
   try {
     console.log(req.body);
-    const { description } = req.body;
+    const { description } = req.body.description;
+    const { category } = req.body.category;
+    console.log(description);
     const newTodo = await pool.query(
-      "INSERT INTO todos (description) VALUES($1) RETURNING *",
-      [description]
+      "INSERT INTO todos (description,category) VALUES($1, $2) RETURNING *",
+      [description, category]
     );
 
     res.json(newTodo.rows[0]);
@@ -179,6 +185,7 @@ app.get("/notes/:id", async (req, res) => {
 app.post("/notes", async (req, res) => {
   try {
     const { description } = req.body;
+    console.log(req.body)
     const newNote = await pool.query(
       "INSERT INTO notes (description) VALUES($1) RETURNING *",
       [description]
