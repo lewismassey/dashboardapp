@@ -1,4 +1,4 @@
-import React, { use State } from "react";
+import React, { useState } from "react";
 
 
 const SearchBar = (props) => {
@@ -14,8 +14,9 @@ const SearchBar = (props) => {
 
   const callSearchFunction = (e) => {
     e.preventDefault();
-    props.search(searchValue);
+    props.getResults(searchValue);
     resetInputField();
+    console.log(searchValue);
   }
 
   return (
