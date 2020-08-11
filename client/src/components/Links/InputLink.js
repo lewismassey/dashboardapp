@@ -2,11 +2,12 @@ import React, { Fragment, useState } from "react";
 
 const InputLink = () => {
   const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("");
 
   const onSubmitForm = async () => {
-    
+
     try {
-      const body = { description };
+      const body = { description, category };
       await fetch("/links", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -31,7 +32,12 @@ const InputLink = () => {
       <div
         className="modal"
         id="newLink"
-        onClick={() => setDescription("")}
+        onClick={() => {
+          if(!description && category){
+           setDescription("");
+           setCategory("");
+         }
+        }}
       >
         <div className="modal-dialog">
           <div className="modal-content">
@@ -41,19 +47,32 @@ const InputLink = () => {
                 type="button"
                 className="close"
                 data-dismiss="modal"
-                onClick={() => setDescription("")}
+                onClick={() => {
+                  setDescription("");
+                  setCategory("");
+                }}
               >
                 &times;
               </button>
             </div>
 
             <div className="modal-body">
+              <h6>Link</h6>
+
               <input
                 type="text"
                 className="form-control"
                 value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={(e) =>  setDescription(e.target.value)}
               />
+              <h6>Category</h6>
+              <input
+                type="text"
+                className="form-control"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              />
+
             </div>
 
             <div className="modal-footer">
@@ -69,7 +88,10 @@ const InputLink = () => {
                 type="button"
                 className="btn btn-danger"
                 data-dismiss="modal"
-                onClick={() => setDescription("")}
+                onClick={() => {
+                  setDescription("");
+                  setCategory("");
+                }}
               >
                 Close
               </button>

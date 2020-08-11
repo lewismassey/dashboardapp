@@ -9,6 +9,9 @@ import InputTodo from './Todos/InputTodo';
 import ListTodos from './Todos/ListTodos';
 import ListTicks from './Ticks/ListTicks';
 import ListNews from './News/ListNews';
+import ListResults from './News/ListResults';
+import ListNotes from './Notes/ListNotes';
+import Calendar from './Calendar/Calendar';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,6 +45,8 @@ const CenteredGrid = () => {
           <Paper className={classes.paper}>DASHBOARD MAGIKKKKKK</Paper>
         </Grid>
         <Grid item xs={5} container>
+        <button data-toggle="collapse" data-target="#links-collapse">Press</button>
+        <div id="links-collapse" className="collapse">
           <Grid item xs={12} className={classes.paper} >
             <Paper className={classes.paper}>
               <h6>Links</h6>
@@ -49,12 +54,18 @@ const CenteredGrid = () => {
               <ListLinks/>
             </Paper>
           </Grid>
+          </div>
           <Grid item xs={12} container>
             <Grid item xs={6} >
-              <Paper className={`${classes.paper} ${classes.calendar}`}>Calendar</Paper>
+              <Paper className={`${classes.paper} ${classes.calendar}`}>
+              <Calendar/>
+              </Paper>
             </Grid>
             <Grid item xs={6} >
-              <Paper className={classes.paper}>Notes</Paper>
+              <Paper className={classes.paper}>
+              Notes
+              <ListNotes/>
+              </Paper>
             </Grid>
           </Grid>
         </Grid>
@@ -62,13 +73,13 @@ const CenteredGrid = () => {
           <Grid item xs={12}>
             <Paper className={classes.paper}>
             <h6>Ticks</h6>
-            
+
             </Paper>
           </Grid>
           <Grid item xs={12}>
             <Paper className={`${classes.paper} ${classes.calendar}`}>
               News/Charts
-              <ListNews/>
+              <ListResults/>
             </Paper>
           </Grid>
         </Grid>

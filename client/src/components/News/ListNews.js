@@ -19,22 +19,15 @@ const ListNews = () => {
   }
   */
 
-  async function getNews() {
-    const response = await fetch('https://newsapi.org/v2/top-headlines?country=us&apiKey=3f8137d4b5474ecf8b8f0aebb0afb18e',
-    { json: true }, (err, res, body) => {
-        if (err) {
-          return console.log(err);
-         }
-         console.log(response);
-       console.log(body.url);
-       console.log(body.explanation);
-    });
-      const tickArray = await response.json();
-    setNews(tickArray);
+  async function getTopHeadlines() {
+    const response = await fetch('news/topheadlines');
+    const tickArray = await response.json();
+    const articles = tickArray.articles;
+    setNews(articles);
   }
 
   useEffect(() => {
-    getNews()
+    getTopHeadlines()
   }, []
 );
 
@@ -55,6 +48,8 @@ const ListNews = () => {
             <tr key={item.url}>
               <td>{item.author}</td>
               <td>{item.description}</td>
+              <td>{item.content}</td>
+            
             </tr>
           ))}
         </tbody>

@@ -3,6 +3,8 @@ const app = express();
 const cors = require("cors");
 const pool = require("./db");
 const path = require("path");
+const NewsAPI = require('newsapi');
+const newsapi = new NewsAPI('3f8137d4b5474ecf8b8f0aebb0afb18e');
 const PORT = process.env.PORT || 5000;
 
 // process.env.NODE_ENV => production or undefined
@@ -45,12 +47,16 @@ app.get("/links/:id", async (req, res) => {
 // create a link
 app.post("/links", async (req, res) => {
   try {
-    console.log(req.body);
-    const { description } = req.body;
+    console.log(req.body.description);
+    const description = req.body.description;
+    console.log(description);
+    const category = req.body.category;
+    console.log(category);
     const newTodo = await pool.query(
-      "INSERT INTO links (link) VALUES($1) RETURNING *",
-      [description]
+      "INSERT INTO links (link, category) VALUES($1, $2) RETURNING *",
+      [description, category]
     );
+    console.log(newTodo);
 
     res.json(newTodo.rows[0]);
   } catch (err) {
@@ -113,10 +119,12 @@ app.get("/todos/:id", async (req, res) => {
 app.post("/todos", async (req, res) => {
   try {
     console.log(req.body);
-    const { description } = req.body;
+    const { description } = req.body.description;
+    const { category } = req.body.category;
+    console.log(description);
     const newTodo = await pool.query(
-      "INSERT INTO todos (description) VALUES($1) RETURNING *",
-      [description]
+      "INSERT INTO todos (description,category) VALUES($1, $2) RETURNING *",
+      [description, category]
     );
 
     res.json(newTodo.rows[0]);
@@ -152,6 +160,91 @@ app.delete("/todos/:id", async (req, res) => {
     console.error(err.message);
   }
 });
+
+app.get("/notes", async (req, res) => {
+  try {
+    const allNotes = await pool.query("SELECT * from notes");
+    res.json(allNotes.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+app.get("/notes/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const note = await pool.query("SELECT * FROM notes WHERE note_id = $1", [
+      id,
+    ]);
+    res.json(note.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+app.post("/notes", async (req, res) => {
+  try {
+    const { description } = req.body;
+    console.log(req.body)
+    const newNote = await pool.query(
+      "INSERT INTO notes (description) VALUES($1) RETURNING *",
+      [description]
+    );
+
+    res.json(newNote.rows[0]);
+  } catch (err){
+    console.error(err.message)
+  }
+})
+
+app.put("/notes/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { description } = req.body;
+    const updateNote = await pool.query(
+      "UPDATE notes SET description = $1 WHERE note_id = $2",
+      [description, id]
+    );
+
+    // res.json('todo was updated', updateTodo);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// delete a todo
+app.delete("/notes/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleteNote = await pool.query("DELETE FROM notes WHERE note_id = $1", [
+      id,
+    ]);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+
+
+//get top headlines from newsapi
+app.get("/news/topheadlines", async (req, res) => {
+
+      const allNews = await newsapi.v2.topHeadlines({
+        country: 'us',
+
+      })
+      res.json(allNews);
+  })
+
+  //get news with query
+
+app.get("/news/:query", async (req, res) => {
+  const { query } = req.params;
+  const results = await newsapi.v2.everything({q: `${query}`})
+  res.json(results);
+})
+
+
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "client/build/index.html"));
